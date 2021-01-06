@@ -15,36 +15,30 @@ function removeLoadingSpiner(){
         quoteContainer.hidden = false;
         loader.hidden = true;
     }
+  }
+// }
+function newQuote(){
+    //pick a random quote from apiQuotes Array
+    const quote = localQuotes[Math.floor(Math.random() * localQuotes.length)];
+
+if(!quote.author){
+    authorText.textContent = 'Unknown';
+}else{
+    authorText.textContent = quote.author;
 }
-//get Quote from API
-async function getQuote(){
-    showLoadingSpiner();
-    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-    const apiQuote ='http://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json';
-    try{
-        const response = await fetch(proxyUrl + apiQuote);
-        const data = await response.json();
-        //if Author is blank add 'Unknown'
-        if(data.quoteAuthor ===''){
-            authorText.innerText = 'Unknown';
-        }else {
-            authorText.innerText = data.quoteAuthor;
-        }
         //reduce fontsize for long quotes
-        if(data.quoteText.length > 120){
-            quoteText.classList.add('long-quote');
-        }else{
-            quoteText.classList.remove('long-quote');
-        }
-        quoteText.innerText = data.quoteText; 
-        //stop loader show the quote
-        removeLoadingSpiner();
-        throw new Error('Oops');
-    }catch(error){
-        console.log(error);
-        getQuote();
-    }
+if(quote.text.length > 120){
+    quoteText.classList.add('long-quote');
+}else{
+    quoteText.classList.remove('long-quote');
 }
+//set quote, and hide loader
+    quoteText.textContent = quote.text;
+    removeLoadingSpiner();
+}
+
+//On Load 
+newQuote();
 //Tweet Quote
 function tweetQuote(){
     const quote = quoteText.innerText;
@@ -53,7 +47,7 @@ function tweetQuote(){
     window.open(twitterURl,'_blank');
 }
 //Event Listeners
-newQuoteBtn.addEventListener('click', getQuote);
+newQuoteBtn.addEventListener('click', newQuote);
 twitterBtn.addEventListener('click', tweetQuote);
 //On Load
-getQuote();
+// getQuote();
